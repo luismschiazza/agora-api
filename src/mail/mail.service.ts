@@ -9,8 +9,7 @@ export class AppMailService {
     await this.mailer.sendMail({
       to,
       subject: 'Bem-vindo!',
-      template:
-        'Seja Bem-vindo ao Agora, o site que veio para substituir o NSA, e melhorar a agilidade do ensino da Etec!',
+      template: 'welcome',
       context: { name },
     });
   }
