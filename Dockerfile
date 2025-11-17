@@ -1,5 +1,5 @@
 # Use a Node.js base image
-FROM node:18-alpine AS development
+FROM node:20.17.0-alpine AS development
 
 # Set the working directory
 WORKDIR /usr/src/app
@@ -22,7 +22,7 @@ CMD ["sh", "-c", "yarn console seed && yarn start:dev"]
 ###################
 # Build for production
 ###################
-FROM node:18-alpine AS build
+FROM node:20.17.0-alpine AS build
 
 # Set the working directory
 WORKDIR /usr/src/app
@@ -42,7 +42,7 @@ ENV NODE_ENV=production
 ###################
 # Production
 ###################
-FROM node:18-alpine AS production
+FROM node:20.17.0-alpine AS production
 
 # Set the working directory
 WORKDIR /usr/src/app
