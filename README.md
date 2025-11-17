@@ -6,6 +6,7 @@ Agora API is a scalable backend service built with **NestJS**, designed to suppo
 It provides a solid architectural foundation including user authentication, email sending, code generation tooling, and MongoDB integration.
 The project prioritizes clean structure, reliable development workflows, and full Docker support.
 
+
 ---
 
 ## Requirements
