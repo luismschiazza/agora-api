@@ -13,13 +13,13 @@ import { UsersService } from '../users.service';
 export class UniqueEmailValidator implements ValidatorConstraintInterface {
   constructor(private readonly usersService: UsersService) {}
 
-  async validate(email: string, args: ValidationArguments) {
+  async validate(email: string): Promise<boolean> {
     const user = await this.usersService.findOneByEmail(email);
     return !user;
   }
 
-  defaultMessage(args: ValidationArguments) {
-    return 'Email $value already exists. Choose another email.';
+  defaultMessage(args: ValidationArguments): string {
+    return `Email ${args.value} already exists. Choose another email.`;
   }
 }
 

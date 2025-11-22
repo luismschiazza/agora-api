@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { SeedModule } from './seed/seed.module';
 import { SeedCommand } from './seed/seed.command';
 import { MailModule } from './mail/mail.module';
+import { DisciplinesModule } from './disciplines/disciplines.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { MailModule } from './mail/mail.module';
     UsersModule,
     SeedModule,
     MailModule,
+    DisciplinesModule,
   ],
   controllers: [AppController],
   providers: [AppService, SeedCommand],
