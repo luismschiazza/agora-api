@@ -1,24 +1,24 @@
 import {
-  Controller,
-  Post,
   Body,
-  UsePipes,
-  UseGuards,
+  Controller,
+  Delete,
   Get,
+  NotFoundException,
   Param,
   Patch,
-  Delete,
+  Post,
   Request,
+  UseGuards,
+  UsePipes,
   ValidationPipe,
-  NotFoundException,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { NotOwnUserGuard } from './guards/not-own-user.guard';
 import { ExcludeOwnUserGuard } from './guards/exclude-own-user.guard';
+import { NotOwnUserGuard } from './guards/not-own-user.guard';
 import { ValidateObjectIdPipe } from './pipes/validate-object-id.pipe';
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {

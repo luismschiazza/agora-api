@@ -18,6 +18,12 @@ export default defineConfig([
       globals: globals.node,
     },
   },
+  {
+    rules: {
+      'no-unused-vars': 'warn'
+    }
+  },
   tsESLint.configs.recommended,
+  tsESLint.configs.recommendedTypeChecked,
   eslintConfigPrettier,
 ]);
