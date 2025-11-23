@@ -18,7 +18,7 @@
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,test}/**/*.ts\"",
     "lint:fix": "eslint \"{src,test}/**/*.ts\" --fix",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format": "prettier \"{src,test}/**/*.ts\" --write",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",

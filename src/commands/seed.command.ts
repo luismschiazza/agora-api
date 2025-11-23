@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { Command, CommandRunner, Option } from 'nest-commander';
-import { SeedService } from '@/seed/seed.service';
+import { SeedService } from '@/commands/seed/services/seed.service';
 
 interface SeedCommandOptions {
   module?: string;
