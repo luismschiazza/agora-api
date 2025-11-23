@@ -13,9 +13,7 @@ export class SeedService {
     const wildcardUserEmail = 'developer@example.com';
     const wildcardUserPassword = 'dev123';
 
-    const existingUser = await this.userModel
-      .findOne({ email: wildcardUserEmail })
-      .exec();
+    const existingUser = await this.userModel.findOne({ email: wildcardUserEmail }).exec();
     if (!existingUser) {
       const wildcardUser = {
         name: 'Wildcard User',
@@ -25,9 +23,7 @@ export class SeedService {
         updatedAt: new Date(),
       };
       await this.userModel.create(wildcardUser);
-      console.log(
-        `Wildcard user created: ${wildcardUserEmail} / ${wildcardUserPassword}`,
-      );
+      console.log(`Wildcard user created: ${wildcardUserEmail} / ${wildcardUserPassword}`);
     } else {
       console.log(`Wildcard user already exists: ${wildcardUserEmail}`);
     }

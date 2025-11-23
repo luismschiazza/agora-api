@@ -10,10 +10,7 @@ async function bootstrap() {
   dotenv.config();
   const app = await NestFactory.create(AppModule);
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
-  app.useGlobalInterceptors(
-    new DelayInterceptor(2000),
-    new ResponseTransformInterceptor(),
-  );
+  app.useGlobalInterceptors(new DelayInterceptor(2000), new ResponseTransformInterceptor());
   app.connectMicroservice(ConsoleModule);
   app.enableCors({
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',

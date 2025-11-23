@@ -31,9 +31,7 @@ export class UsersService {
     if (!existingUser) {
       return null;
     }
-    return this.userModel
-      .findByIdAndUpdate(id, updateUserDto, { new: true })
-      .exec();
+    return this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true }).exec();
   }
 
   async delete(id: string): Promise<User | null> {

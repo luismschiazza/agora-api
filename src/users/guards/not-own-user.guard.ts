@@ -1,9 +1,4 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  ForbiddenException,
-} from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, ForbiddenException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
 @Injectable()
@@ -16,9 +11,7 @@ export class NotOwnUserGuard implements CanActivate {
     const userId = request.params.id;
 
     if (user && userId && user.id === userId) {
-      throw new ForbiddenException(
-        'You cannot perform this action on your own user data',
-      );
+      throw new ForbiddenException('You cannot perform this action on your own user data');
     }
 
     return true;
