@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { GenerateJwtSecretCommand } from '@/commands/generate-jwt-secret.command';
 import { SeedCommand } from '@/commands/seed.command';
 import { SeedModule } from '@/commands/seed/seed.module';
 import { AuthModule } from '@/features/auth/auth.module';
@@ -19,6 +20,6 @@ import { AppService } from './services/app.service';
     UsersModule,
   ],
   controllers: [AppController],
-  providers: [AppService, SeedCommand],
+  providers: [AppService, SeedCommand, GenerateJwtSecretCommand],
 })
 export class AppModule {}

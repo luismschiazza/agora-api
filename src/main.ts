@@ -1,6 +1,6 @@
-import { ClassSerializerInterceptor, Logger } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { NestFactory, Reflector } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import { useContainer } from 'class-validator';
 import { DelayInterceptor } from '@/common/interceptors/delay.interceptor';
 import { ResponseTransformInterceptor } from '@/common/interceptors/response-transform.interceptor';
@@ -14,7 +14,6 @@ async function bootstrap() {
   const port = configService.get<number>('PORT');
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
-  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.useGlobalInterceptors(new DelayInterceptor(2000), new ResponseTransformInterceptor());
   app.enableCors({
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',

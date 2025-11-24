@@ -14,9 +14,9 @@ import {
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { JwtAuthGuard } from '@/features/auth/guards/jwt-auth.guard';
-import { ResponseUserDto } from '../dto/response/response-user.dto';
-import { CreateUserDto } from '../dto/validation/create-user.dto';
-import { UpdateUserDto } from '../dto/validation/update-user.dto';
+import { ResponseUserDto } from '../dtos/response/response-user.dto';
+import { CreateUserDto } from '../dtos/validation/create-user.dto';
+import { UpdateUserDto } from '../dtos/validation/update-user.dto';
 import { ExcludeOwnUserGuard } from '../guards/exclude-own-user.guard';
 import { NotOwnUserGuard } from '../guards/not-own-user.guard';
 import { ValidateObjectIdPipe } from '../pipes/validate-object-id.pipe';

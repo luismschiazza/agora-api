@@ -9,13 +9,13 @@ export class User extends Document {
   @Prop({ required: true, unique: true })
   email: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, select: false })
   password: string;
 
   @Prop()
   emailVerifiedAt: Date;
 
-  @Prop()
+  @Prop({ select: false })
   rememberToken: string;
 
   @Prop({ default: Date.now })
@@ -26,3 +26,16 @@ export class User extends Document {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+UserSchema.set('toObject', { virtuals: true });
+UserSchema.set('toJSON', {
+  virtuals: true,
+  versionKey: false,
+  transform: (_, ret) => {
+    ret.id = ret._id?.toString();
+    delete ret._id;
+    delete ret.password;
+    delete ret.rememberToken;
+    return ret;
+  },
+});

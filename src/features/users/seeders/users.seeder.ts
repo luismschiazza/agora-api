@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import * as bcrypt from 'bcryptjs';
 import { Model } from 'mongoose';
 import { UserFactory } from '../factories/user.factory';
 import { User } from '../interfaces/user.interface';
@@ -24,7 +25,7 @@ export class UsersSeeder {
       await this.userModel.create({
         name: 'Wildcard User',
         email: wildcardUserEmail,
-        password: wildcardUserPassword,
+        password: await bcrypt.hash(wildcardUserPassword, 10),
         createdAt: new Date(),
         updatedAt: new Date(),
       });
@@ -35,7 +36,12 @@ export class UsersSeeder {
     }
 
     const amount = limit && limit > 0 ? limit : 25;
-    const users = UserFactory.makeMany(amount);
+    const users = await Promise.all(
+      UserFactory.makeMany(amount).map(async (user) => ({
+        ...user,
+        password: await bcrypt.hash(user.password, 10),
+      })),
+    );
     await this.userModel.insertMany(users);
 
     this.logger.log(`✔ Created ${amount} user(s).`);
