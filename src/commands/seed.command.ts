@@ -29,6 +29,10 @@ export class SeedCommand extends CommandRunner {
           await this.seedService.seedUsers?.(options.limit);
           break;
 
+        case 'disciplines':
+          await this.seedService.seedDisciplines?.(options.limit);
+          break;
+
         default:
           this.logger.error(`❌ Unknown module: ${options.module}`);
           break;
@@ -40,7 +44,7 @@ export class SeedCommand extends CommandRunner {
 
   @Option({
     flags: '-m, --module <module>',
-    description: 'Target module to seed (e.g., users)',
+    description: 'Target module to seed (e.g., users, disciplines)',
   })
   parseModule(val: string): string {
     return val;
