@@ -13,8 +13,8 @@ The project prioritizes clean structure, reliable development workflows, and ful
 
 To run this project, ensure your machine has the following:
 
-- [Node.js (20.x LTS)](https://nodejs.org/)
-- [npm (>= 9.x)](https://www.npmjs.com/) or [Yarn (>= 1.22.x)](https://yarnpkg.com/)
+- [Node.js (24.x LTS)](https://nodejs.org/)
+- [npm (>=11.3)](https://www.npmjs.com/)
 - [Docker Engine (>= 20.x)](https://www.docker.com/)
 - [Docker Compose Plugin (>= 2.x)](https://docs.docker.com/compose/)
 - [nvm installed](https://github.com/nvm-sh/nvm) 
@@ -45,12 +45,13 @@ Copy the example configuration file:
 cp .env.example .env
 ```
 
+After creating the `.env` file, run the command `npm run cli -- generate:jwt-secret` to automatically generate and populate the `JWT_SECRET` value in your `.env` file.
+
 Then update `.env` with your environment values, such as:
 
+- Application host and ports
 - MongoDB connection URL
-- SMTP configuration
-- JWT secrets
-- Application ports
+- JWT secrets and expiration settings
 
 ### 4. Install Dependencies
 
@@ -58,12 +59,6 @@ Using npm:
 
 ```bash
 npm install
-```
-
-Or using yarn:
-
-```bash
-yarn install
 ```
 
 ---
@@ -85,7 +80,7 @@ docker compose up -d mongo-db
 Then start NestJS locally with hot reload:
 
 ```bash
-yarn start:dev
+npm run start:dev
 ```
 
 ### Run Everything in Docker
@@ -113,7 +108,7 @@ mongod
 ### Run the NestJS Application
 
 ```bash
-yarn start:dev
+npm run start:dev
 ```
 
 ---
@@ -124,35 +119,35 @@ The project includes several useful development scripts defined in `package.json
 
 ### General Commands
 
-- **`yarn build`**
+- **`npm run build`**
   Compiles TypeScript into JavaScript in the `dist` folder.
 
-- **`yarn start`**
+- **`npm start`**
   Runs the compiled application in production mode.
 
-- **`yarn start:dev`**
+- **`npm run start:dev`**
   Runs the application with hot reload enabled.
   Recommended for development.
 
-- **`yarn start:prod`**
+- **`npm run start:prod`**
   Runs the application in production mode.
 
-- **`yarn test`**
+- **`npm test`**
   Executes unit tests using Jest.
 
-- **`yarn format`**
+- **`npm run format`**
   Formats source code using Prettier.
 
-- **`yarn lint`**
+- **`npm run lint`**
   Lints the codebase using ESLint and automatically fixes issues.
 
 ### Console Commands
 
-- **`yarn console`**
-  Opens the NestJS console environment.
+- **`npm run cli -- seed`**
+  Seeds the database with demo data.
 
-- **`yarn console seed`**
-  Seeds the database with initial example data.
+- **`npm run cli -- generate:jwt-secret`**
+  Generates a secure JWT secret and updates the .env file.
 
 ---
 
@@ -199,6 +194,31 @@ Below are useful Docker commands for local development:
   ```bash
   docker run -d -p <host_port>:<container_port> <image_name>
   ```
+
+---
+
+## API Documentation
+
+The project now includes full Swagger documentation available at `/api/docs`.  
+You can also import this API specification directly into Postman:
+
+### Importing Swagger into Postman
+1. Start the application (`npm run start:dev`).
+2. Open your browser at: `http://localhost:3000/api/docs-json`
+3. Copy the full JSON returned by the endpoint.
+4. In Postman, click **Import**.
+5. Select **Link** or **Raw Text** and paste the JSON.
+6. Postman will automatically generate a full collection with all endpoints, payload examples, and authentication requirements.
+
+### Why Use Swagger + Postman?
+- Ensures your API documentation always stays up to date.
+- Works as a single source of truth for backend and frontend teams.
+- Allows you to share a ready‑to‑use Postman collection with your team or client.
+
+More documentation can be added in the future such as:
+- Contribution guidelines
+- Production deployment instructions
+- Versioning and release workflow
 
 ---
 
