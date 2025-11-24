@@ -1,6 +1,7 @@
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { useContainer } from 'class-validator';
 import { DelayInterceptor } from '@/common/interceptors/delay.interceptor';
 import { ResponseTransformInterceptor } from '@/common/interceptors/response-transform.interceptor';
@@ -19,6 +20,17 @@ async function bootstrap() {
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
+
+  // Swagger configuration
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('Agora API')
+    .setDescription('API documentation for the Agora project')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+
+  const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('api/docs', app, swaggerDocument);
 
   await app.listen(port, host);
   logger.log(`🚀 Application running at: ${await app.getUrl()}`);

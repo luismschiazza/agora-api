@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { GenerateJwtSecretCommand } from '@/commands/generate-jwt-secret.command';
 import { SeedCommand } from '@/commands/seed.command';
 import { SeedModule } from '@/commands/seed/seed.module';
+import { ValidateObjectIdPipe } from '@/common/pipes/validate-object-id.pipe';
 import { AuthModule } from '@/features/auth/auth.module';
 import { DisciplinesModule } from '@/features/disciplines/disciplines.module';
 import { UsersModule } from '@/features/users/users.module';
@@ -22,6 +23,6 @@ import { AppService } from './services/app.service';
     UsersModule,
   ],
   controllers: [AppController],
-  providers: [AppService, SeedCommand, GenerateJwtSecretCommand],
+  providers: [AppService, GenerateJwtSecretCommand, SeedCommand, ValidateObjectIdPipe],
 })
 export class AppModule {}

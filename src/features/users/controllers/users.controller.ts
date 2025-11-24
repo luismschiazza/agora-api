@@ -12,20 +12,24 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { ApiOkResponse } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
+import { ValidateObjectIdPipe } from '@/common/pipes/validate-object-id.pipe';
 import { JwtAuthGuard } from '@/features/auth/guards/jwt-auth.guard';
-import { ResponseUserDto } from '../dtos/response/response-user.dto';
+import { ResponseUserArrayDto } from '../dtos/response/response-user-array.dto';
+import { ResponseUserSingleDto } from '../dtos/response/response-user-single.dto';
+import { UserDto } from '../dtos/response/user.dto';
 import { CreateUserDto } from '../dtos/validation/create-user.dto';
 import { UpdateUserDto } from '../dtos/validation/update-user.dto';
 import { ExcludeOwnUserGuard } from '../guards/exclude-own-user.guard';
 import { NotOwnUserGuard } from '../guards/not-own-user.guard';
-import { ValidateObjectIdPipe } from '../pipes/validate-object-id.pipe';
 import { UsersService } from '../services/users.service';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @ApiOkResponse({ type: ResponseUserSingleDto })
   @Post()
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async create(@Body() createUserDto: CreateUserDto) {
@@ -33,28 +37,32 @@ export class UsersController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @ApiOkResponse({ type: ResponseUserSingleDto })
   @Get('profile')
   async getProfile(@Request() req) {
-    return plainToInstance(ResponseUserDto, req.user, { excludeExtraneousValues: true });
+    return plainToInstance(UserDto, req.user, { excludeExtraneousValues: true });
   }
 
   @UseGuards(JwtAuthGuard, ExcludeOwnUserGuard)
+  @ApiOkResponse({ type: ResponseUserArrayDto, isArray: true })
   @Get()
   async findAll(@Request() req) {
-    return plainToInstance(ResponseUserDto, req.filteredUsers, { excludeExtraneousValues: true });
+    return plainToInstance(UserDto, req.filteredUsers, { excludeExtraneousValues: true });
   }
 
   @UseGuards(JwtAuthGuard, NotOwnUserGuard)
+  @ApiOkResponse({ type: ResponseUserSingleDto })
   @Get(':id')
   async findOne(@Param('id', ValidateObjectIdPipe) id: string) {
     const user = await this.usersService.findOneById(id);
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
-    return plainToInstance(ResponseUserDto, user, { excludeExtraneousValues: true });
+    return plainToInstance(UserDto, user, { excludeExtraneousValues: true });
   }
 
   @UseGuards(JwtAuthGuard, NotOwnUserGuard)
+  @ApiOkResponse({ type: ResponseUserSingleDto })
   @Patch(':id')
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async update(
@@ -65,16 +73,17 @@ export class UsersController {
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
-    return plainToInstance(ResponseUserDto, user, { excludeExtraneousValues: true });
+    return plainToInstance(UserDto, user, { excludeExtraneousValues: true });
   }
 
   @UseGuards(JwtAuthGuard, NotOwnUserGuard)
+  @ApiOkResponse({ type: ResponseUserSingleDto })
   @Delete(':id')
   async delete(@Param('id', ValidateObjectIdPipe) id: string) {
     const user = await this.usersService.delete(id);
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
-    return plainToInstance(ResponseUserDto, user, { excludeExtraneousValues: true });
+    return plainToInstance(UserDto, user, { excludeExtraneousValues: true });
   }
 }

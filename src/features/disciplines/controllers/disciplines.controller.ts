@@ -11,10 +11,13 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { ApiOkResponse } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
+import { ValidateObjectIdPipe } from '@/common/pipes/validate-object-id.pipe';
 import { JwtAuthGuard } from '@/features/auth/guards/jwt-auth.guard';
-import { ValidateObjectIdPipe } from '@/features/users/pipes/validate-object-id.pipe';
-import { ResponseDisciplineDto } from '../dtos/response/response-discipline.dto';
+import { DisciplineDto } from '../dtos/response/discipline.dto';
+import { ResponseDisciplineArrayDto } from '../dtos/response/response-discipline-array.dto';
+import { ResponseDisciplineSingleDto } from '../dtos/response/response-discipline-single.dto';
 import { CreateDisciplineDto } from '../dtos/validation/create-discipline.dto';
 import { UpdateDisciplineDto } from '../dtos/validation/update-discipline.dto';
 import { DisciplinesService } from '../services/disciplines.service';
@@ -26,30 +29,33 @@ export class DisciplinesController {
   @UseGuards(JwtAuthGuard)
   @Post()
   @UsePipes(new ValidationPipe({ whitelist: true }))
+  @ApiOkResponse({ type: ResponseDisciplineSingleDto })
   async create(@Body() createDisciplineDto: CreateDisciplineDto) {
     const discipline = await this.disciplinesService.create(createDisciplineDto);
-    return plainToInstance(ResponseDisciplineDto, discipline, {
+    return plainToInstance(DisciplineDto, discipline, {
       excludeExtraneousValues: true,
     });
   }
 
   @UseGuards(JwtAuthGuard)
   @Get()
+  @ApiOkResponse({ type: ResponseDisciplineArrayDto, isArray: true })
   async findAll() {
     const disciplines = await this.disciplinesService.findAll();
-    return plainToInstance(ResponseDisciplineDto, disciplines, {
+    return plainToInstance(DisciplineDto, disciplines, {
       excludeExtraneousValues: true,
     });
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
+  @ApiOkResponse({ type: ResponseDisciplineSingleDto })
   async findOne(@Param('id', ValidateObjectIdPipe) id: string) {
     const discipline = await this.disciplinesService.findOneById(id);
     if (!discipline) {
       throw new NotFoundException(`Discipline with ID ${id} not found`);
     }
-    return plainToInstance(ResponseDisciplineDto, discipline, {
+    return plainToInstance(DisciplineDto, discipline, {
       excludeExtraneousValues: true,
     });
   }
@@ -57,6 +63,7 @@ export class DisciplinesController {
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   @UsePipes(new ValidationPipe({ whitelist: true }))
+  @ApiOkResponse({ type: ResponseDisciplineSingleDto })
   async update(
     @Param('id', ValidateObjectIdPipe) id: string,
     @Body() updateDisciplineDto: UpdateDisciplineDto,
@@ -65,19 +72,20 @@ export class DisciplinesController {
     if (!discipline) {
       throw new NotFoundException(`Discipline with ID ${id} not found`);
     }
-    return plainToInstance(ResponseDisciplineDto, discipline, {
+    return plainToInstance(DisciplineDto, discipline, {
       excludeExtraneousValues: true,
     });
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
+  @ApiOkResponse({ type: ResponseDisciplineSingleDto })
   async delete(@Param('id', ValidateObjectIdPipe) id: string) {
     const deleted = await this.disciplinesService.delete(id);
     if (!deleted) {
       throw new NotFoundException(`Discipline with ID ${id} not found`);
     }
-    return plainToInstance(ResponseDisciplineDto, deleted, {
+    return plainToInstance(DisciplineDto, deleted, {
       excludeExtraneousValues: true,
     });
   }
