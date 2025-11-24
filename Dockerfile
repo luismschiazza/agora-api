@@ -1,14 +1,14 @@
 # Use a Node.js base image
-FROM node:20.17.0-alpine AS development
+FROM node:24.11.1-alpine AS development
 
 # Set the working directory
 WORKDIR /usr/src/app
 
-# Copy package.json and yarn.lock to the working directory
-COPY package.json yarn.lock ./
+# Copy package.json and package-lock.json to the working directory
+COPY package.json package-lock.json ./
 
 # Install dependencies
-RUN yarn install
+RUN npm install
 
 # Copy the entire project to the working directory
 COPY . .
@@ -17,12 +17,12 @@ COPY . .
 EXPOSE 3000
 
 # Start the application in development mode
-CMD ["sh", "-c", "yarn console seed && yarn start:dev"]
+CMD ["npm", "run", "start:dev"]
 
 ###################
 # Build for production
 ###################
-FROM node:20.17.0-alpine AS build
+FROM node:24.11.1-alpine AS build
 
 # Set the working directory
 WORKDIR /usr/src/app
@@ -31,10 +31,10 @@ WORKDIR /usr/src/app
 COPY --from=development /usr/src/app ./
 
 # Run the build command which creates the production bundle
-RUN yarn build
+RUN npm run build
 
 # Install all dependencies, including dev dependencies, to ensure tools like ts-node are available
-RUN yarn install --production=false --frozen-lockfile && yarn cache clean
+RUN npm install --include=dev
 
 # Set the NODE_ENV environment variable
 ENV NODE_ENV=production
@@ -42,7 +42,7 @@ ENV NODE_ENV=production
 ###################
 # Production
 ###################
-FROM node:20.17.0-alpine AS production
+FROM node:24.11.1-alpine AS production
 
 # Set the working directory
 WORKDIR /usr/src/app
@@ -53,5 +53,5 @@ COPY --from=build /usr/src/app ./
 # Expose the application port
 EXPOSE 3000
 
-# Start the server and seed the database using the production build
-CMD ["sh", "-c", "yarn console seed && node dist/main"]
+# Start the server using the production build
+CMD ["node", "dist/main"]

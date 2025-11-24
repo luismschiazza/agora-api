@@ -16,9 +16,8 @@ services:
     depends_on:
       - mongo-db
     environment:
-      MONGO_URL: mongodb://mongo-db:27017/nest
-      JWT_SECRET: secretKey  # Ensure this matches the secret in your code
-    command: sh -c "yarn console seed && yarn start:dev" # Updated to run the seed console command
+      MONGO_URL: mongodb://mongo-db:27017/agora
+    command: npm run start:dev
 
 volumes:
   mongo-data:

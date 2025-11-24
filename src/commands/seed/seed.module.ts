@@ -1,0 +1,11 @@
+import { Module } from '@nestjs/common';
+import { DisciplinesSeedModule } from '@/features/disciplines/seeders/disciplines.seed.module';
+import { UsersSeedModule } from '@/features/users/seeders/users.seed.module';
+import { SeedService } from './services/seed.service';
+
+@Module({
+  imports: [DisciplinesSeedModule, UsersSeedModule],
+  providers: [SeedService],
+  exports: [SeedService],
+})
+export class SeedModule {}
