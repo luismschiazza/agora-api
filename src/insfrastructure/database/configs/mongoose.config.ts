@@ -5,6 +5,6 @@ export const MongooseConfig = async (
   configService: ConfigService,
 ): Promise<MongooseModuleFactoryOptions> => {
   return {
-    uri: configService.get<string>('MONGO_URL'),
+    uri: configService.get<string>('MONGO_URI'),
   };
 };

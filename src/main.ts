@@ -33,7 +33,7 @@ async function bootstrap() {
   SwaggerModule.setup('api/docs', app, swaggerDocument);
 
   await app.listen(port, host);
-  logger.log(`🚀 Application running at: ${await app.getUrl()}`);
+  logger.log(`Application running at: ${await app.getUrl()}`);
 }
 
 bootstrap();
