@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEmail, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsEmail, IsOptional, IsString } from 'class-validator';
 import { IsUniqueEmail } from '../../validators/unique-email.validator';
 
 export class UpdateUserDto {
@@ -18,4 +18,14 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   password?: string;
+
+  @ApiPropertyOptional({
+    description: 'User roles',
+    example: ['ADMIN', 'COORDINATOR'],
+    isArray: true,
+  })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  roles?: string[];
 }

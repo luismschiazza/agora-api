@@ -26,6 +26,7 @@ export class UsersSeeder {
         name: 'Wildcard User',
         email: wildcardUserEmail,
         password: await bcrypt.hash(wildcardUserPassword, 10),
+        roles: ['ADMIN'],
         createdAt: new Date(),
         updatedAt: new Date(),
       });

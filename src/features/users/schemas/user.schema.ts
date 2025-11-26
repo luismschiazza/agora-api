@@ -18,6 +18,9 @@ export class User extends Document {
   @Prop({ select: false })
   rememberToken: string;
 
+  @Prop({ type: [String], default: ['STUDENT'] })
+  roles: string[];
+
   @Prop({ default: Date.now })
   createdAt: Date;
 

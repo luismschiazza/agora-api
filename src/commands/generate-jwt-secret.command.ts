@@ -20,7 +20,7 @@ export class GenerateJwtSecretCommand extends CommandRunner {
     const exists = fs.existsSync(envPath);
 
     if (!exists) {
-      this.logger.error('❌ .env file not found at project root.');
+      this.logger.error('.env file not found at project root.');
       return;
     }
 
@@ -32,7 +32,7 @@ export class GenerateJwtSecretCommand extends CommandRunner {
     let updated: string;
 
     if (hasKey && !isEmpty && !options.force) {
-      this.logger.log('⚠️  JWT_SECRET already exists and is not empty. Use --force to overwrite.');
+      this.logger.log('JWT_SECRET already exists and is not empty. Use --force to overwrite.');
       return;
     }
 
@@ -44,8 +44,8 @@ export class GenerateJwtSecretCommand extends CommandRunner {
 
     fs.writeFileSync(envPath, updated);
 
-    this.logger.log('🔐 New JWT secret generated successfully!');
-    this.logger.log('✨ Value:');
+    this.logger.log('New JWT secret generated successfully!');
+    this.logger.log('Value:');
     this.logger.log(newSecret);
   }
 

@@ -28,11 +28,11 @@ export class UsersService {
   }
 
   async findOneByEmailWithPassword(email: string): Promise<User | null> {
-    return this.userModel.findOne({ email }).select('+password').exec();
+    return this.userModel.findOne({ email }).select('+password +roles').exec();
   }
 
   async findOneById(id: string): Promise<User | null> {
-    return this.userModel.findById(id).exec();
+    return this.userModel.findById(id).select('+roles').exec();
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User | null> {

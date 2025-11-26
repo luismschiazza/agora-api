@@ -20,7 +20,7 @@ export class SeedCommand extends CommandRunner {
   async run(_: string[], options: SeedCommandOptions): Promise<void> {
     try {
       if (!options.module) {
-        this.logger.error('❌ No module provided. Use --module <name>.');
+        this.logger.error('No module provided. Use --module <name>.');
         return;
       }
 
@@ -34,11 +34,11 @@ export class SeedCommand extends CommandRunner {
           break;
 
         default:
-          this.logger.error(`❌ Unknown module: ${options.module}`);
+          this.logger.error(`Unknown module: ${options.module}`);
           break;
       }
     } catch (error) {
-      this.logger.error('❌ Seed command failed:', error);
+      this.logger.error('Seed command failed:', error);
     }
   }
 
