@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Logger } from '@nestjs/common';
 import { AttendancesSeeder } from '@/features/attendance/seeders/attendance.seeder';
 import { DisciplinesSeeder } from '@/features/disciplines/seeders/disciplines.seeder';
+import { GradesSeeder } from '@/features/grades/seeders/grades.seeder';
 import { MeetingsSeeder } from '@/features/meeting/seeders/meetings.seeder';
 import { UsersSeeder } from '@/features/users/seeders/users.seeder';
 
@@ -13,6 +14,7 @@ export class SeedService {
     private readonly disciplinesSeeder: DisciplinesSeeder,
     private readonly attendancesSeeder: AttendancesSeeder,
     private readonly meetingsSeeder: MeetingsSeeder,
+    private readonly gradesSeeder: GradesSeeder,
   ) {}
 
   async seedDisciplines(limit?: number): Promise<void> {
@@ -33,5 +35,10 @@ export class SeedService {
   async seedMeeting(limit?: number): Promise<void> {
     await this.meetingsSeeder.run(limit);
     this.logger.log('✔ Meeting seeding finished.');
+  }
+
+  async seedGrade(limit?: number): Promise<void> {
+    await this.gradesSeeder.run(limit);
+    this.logger.log('✔ Grades seeding finished.');
   }
 }
