@@ -37,6 +37,10 @@ export class SeedCommand extends CommandRunner {
           await this.seedService.seedAttendances?.(options.limit);
           break;
 
+        case 'meetings':
+          await this.seedService.seedMeeting?.(options.limit);
+          break;
+
         default:
           this.logger.error(`Unknown module: ${options.module}`);
           break;

@@ -7,6 +7,7 @@ import { ValidateObjectIdPipe } from '@/common/pipes/validate-object-id.pipe';
 import { AttendanceModule } from '@/features/attendance/attendance.module';
 import { AuthModule } from '@/features/auth/auth.module';
 import { DisciplinesModule } from '@/features/disciplines/disciplines.module';
+import { MeetingsModule } from '@/features/meeting/meeting.module';
 import { UsersModule } from '@/features/users/users.module';
 import { DatabaseModule } from '@/insfrastructure/database/database.module';
 import { AppController } from './controllers/app.controller';
@@ -21,6 +22,7 @@ import { AppService } from './services/app.service';
     AuthModule,
     DisciplinesModule,
     AttendanceModule,
+    MeetingsModule,
     UsersModule,
     SeedModule,
   ],
