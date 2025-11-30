@@ -15,7 +15,7 @@ async function bootstrap() {
   const port = configService.get<number>('PORT');
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
-  app.useGlobalInterceptors(new DelayInterceptor(2000), new ResponseTransformInterceptor());
+  app.useGlobalInterceptors(new DelayInterceptor(100), new ResponseTransformInterceptor());
   app.enableCors({
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
