@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcryptjs';
 import { Model } from 'mongoose';
@@ -8,7 +9,11 @@ import { User } from '../interfaces/user.interface';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel('User') private userModel: Model<User>) {}
+  constructor(
+    @InjectModel('User')
+    private userModel: Model<User>,
+    private eventEmitter: EventEmitter2,
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
@@ -16,7 +21,12 @@ export class UsersService {
       ...createUserDto,
       password: hashedPassword,
     });
-    return createdUser.save();
+
+    const saved = await createdUser.save();
+
+    this.eventEmitter.emit('user.created', saved);
+
+    return saved;
   }
 
   async findAll(): Promise<User[]> {

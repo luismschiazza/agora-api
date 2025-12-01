@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { GenerateJwtSecretCommand } from '@/commands/generate-jwt-secret.command';
 import { SeedCommand } from '@/commands/seed.command';
 import { SeedModule } from '@/commands/seed/seed.module';
@@ -19,6 +20,8 @@ import { AppService } from './services/app.service';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    EventEmitterModule.forRoot(),
+
     DatabaseModule,
     AuthModule,
     DisciplinesModule,

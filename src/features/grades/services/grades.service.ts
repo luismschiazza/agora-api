@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateGradeDto } from '../dtos/validation/create-grade.dto';
@@ -10,6 +11,7 @@ export class GradesService {
   constructor(
     @InjectModel('Grade')
     private readonly gradeModel: Model<Grade>,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async create(dto: CreateGradeDto, recordedBy: string) {
@@ -17,7 +19,11 @@ export class GradesService {
       ...dto,
       recordedBy,
     });
-    return grade.save();
+    const saved = await grade.save();
+
+    this.eventEmitter.emit('grade.created', saved);
+
+    return saved;
   }
 
   async findAll() {

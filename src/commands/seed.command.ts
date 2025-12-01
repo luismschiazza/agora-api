@@ -45,6 +45,10 @@ export class SeedCommand extends CommandRunner {
           await this.seedService.seedGrade?.(options.limit);
           break;
 
+        case 'mails':
+          await this.seedService.seedMailer?.();
+          break;
+
         default:
           this.logger.error(`Unknown module: ${options.module}`);
           break;

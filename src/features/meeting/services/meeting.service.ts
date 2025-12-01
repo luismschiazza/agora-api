@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateMeetingDto } from '../dtos/validation/create-meeting.dto';
@@ -10,6 +11,7 @@ export class MeetingsService {
   constructor(
     @InjectModel('Meeting')
     private readonly meetingModel: Model<Meeting>,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   private async checkScheduleConflict(start: Date, end: Date, ignoreId?: string) {
@@ -37,7 +39,11 @@ export class MeetingsService {
       createdBy,
     });
 
-    return meeting.save();
+    const saved = await meeting.save();
+
+    this.eventEmitter.emit('meeting.created', saved);
+
+    return saved;
   }
 
   async findAll() {
