@@ -1,6 +1,9 @@
 import { ExecutionContext } from '@nestjs/common';
 
-const SENSITIVE_THROTTLED_ENDPOINTS = [{ method: 'POST', path: '/auth/login' }];
+const SENSITIVE_THROTTLED_ENDPOINTS = [
+  { method: 'POST', path: '/auth/login' },
+  { method: 'POST', path: '/auth/refresh' },
+];
 
 export function shouldSkipThrottle(context: ExecutionContext): boolean {
   const request = context.switchToHttp().getRequest<{

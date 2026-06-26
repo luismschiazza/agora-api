@@ -19,6 +19,9 @@ export class User extends Document {
   @Prop({ select: false })
   rememberToken: string;
 
+  @Prop({ select: false })
+  refreshTokenHash: string;
+
   @Prop({ type: [String], enum: Object.values(Role), default: [Role.STUDENT] })
   roles: Role[];
 
@@ -40,6 +43,7 @@ UserSchema.set('toJSON', {
     delete ret._id;
     delete ret.password;
     delete ret.rememberToken;
+    delete ret.refreshTokenHash;
     return ret;
   },
 });

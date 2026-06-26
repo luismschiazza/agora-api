@@ -11,6 +11,9 @@ describe('AuthService', () => {
   const mockUsersService = {
     findOneByEmailWithPassword: jest.fn(),
     findOneById: jest.fn(),
+    findOneByIdWithRefreshTokenHash: jest.fn(),
+    updateRefreshTokenHash: jest.fn(),
+    clearRefreshTokenHash: jest.fn(),
   };
 
   const mockJwtService = {
@@ -71,18 +74,62 @@ describe('AuthService', () => {
   it('signs access tokens with a stable subject id', async () => {
     mockJwtService.sign.mockReturnValue('signed-token');
     mockJwtService.decode.mockReturnValue({ exp: Math.floor(Date.now() / 1000) + 3600 });
+    mockUsersService.updateRefreshTokenHash.mockResolvedValue({});
 
-    await service.login({
+    const response = await service.login({
       id: 'user-id',
       email: 'developer@example.com',
       name: 'Developer',
       roles: [Role.ADMIN],
     });
-
+    expect(response).toMatchObject({
+      access_token: 'signed-token',
+      accessToken: 'signed-token',
+    });
+    expect(response.refresh_token).toEqual(expect.any(String));
+    expect(response.refreshToken).toBe(response.refresh_token);
+    expect(mockUsersService.updateRefreshTokenHash).toHaveBeenCalledWith(
+      'user-id',
+      expect.any(String),
+    );
     expect(mockJwtService.sign).toHaveBeenCalledWith({
       sub: 'user-id',
       email: 'developer@example.com',
       roles: [Role.ADMIN],
     });
+  });
+
+  it('refreshes and rotates tokens when the refresh token hash matches', async () => {
+    mockJwtService.sign.mockReturnValue('new-access-token');
+    mockJwtService.decode.mockReturnValue({ exp: Math.floor(Date.now() / 1000) + 3600 });
+    mockUsersService.updateRefreshTokenHash.mockResolvedValue({});
+
+    const refreshToken = `user-id.${Date.now() + 3600000}.refresh-token-value`;
+    const refreshTokenHash = await bcrypt.hash(refreshToken, 4);
+    mockUsersService.findOneByIdWithRefreshTokenHash.mockResolvedValue({
+      id: 'user-id',
+      email: 'developer@example.com',
+      name: 'Developer',
+      roles: [Role.ADMIN],
+      refreshTokenHash,
+    });
+
+    const response = await service.refresh(refreshToken);
+
+    expect(mockUsersService.findOneByIdWithRefreshTokenHash).toHaveBeenCalledWith('user-id');
+    expect(response.access_token).toBe('new-access-token');
+    expect(response.refresh_token).toEqual(expect.any(String));
+    expect(response.refresh_token).not.toBe(refreshToken);
+    expect(mockUsersService.updateRefreshTokenHash).toHaveBeenCalledTimes(1);
+  });
+
+  it('clears the stored refresh token hash on logout', async () => {
+    mockUsersService.clearRefreshTokenHash.mockResolvedValue({});
+
+    await expect(service.logout('user-id')).resolves.toEqual({
+      message: 'Logged out successfully',
+    });
+
+    expect(mockUsersService.clearRefreshTokenHash).toHaveBeenCalledWith('user-id');
   });
 });
