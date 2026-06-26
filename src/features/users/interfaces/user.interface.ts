@@ -1,4 +1,5 @@
 import { Document } from 'mongoose';
+import { Role } from '@/common/enums/role.enum';
 
 export interface User extends Document {
   readonly name: string;
@@ -6,7 +7,7 @@ export interface User extends Document {
   readonly password: string;
   readonly emailVerifiedAt?: Date;
   readonly rememberToken?: string;
-  readonly roles: string[];
+  readonly roles: Role[];
   readonly createdAt: Date;
   readonly updatedAt: Date;
 }

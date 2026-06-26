@@ -3,9 +3,12 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectModel } from '@nestjs/mongoose';
 import * as bcrypt from 'bcryptjs';
 import { Model } from 'mongoose';
+import { Role } from '@/common/enums/role.enum';
 import { CreateUserDto } from '../dtos/validation/create-user.dto';
 import { UpdateUserDto } from '../dtos/validation/update-user.dto';
 import { User } from '../interfaces/user.interface';
+
+const PASSWORD_SALT_ROUNDS = 12;
 
 @Injectable()
 export class UsersService {
@@ -16,10 +19,12 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    const hashedPassword = await bcrypt.hash(createUserDto.password, PASSWORD_SALT_ROUNDS);
     const createdUser = new this.userModel({
-      ...createUserDto,
+      name: createUserDto.name,
+      email: createUserDto.email,
       password: hashedPassword,
+      roles: [Role.STUDENT],
     });
 
     const saved = await createdUser.save();
@@ -34,11 +39,14 @@ export class UsersService {
   }
 
   async findOneByEmail(email: string): Promise<User> {
-    return this.userModel.findOne({ email }).exec();
+    return this.userModel.findOne({ email: email.trim().toLowerCase() }).exec();
   }
 
   async findOneByEmailWithPassword(email: string): Promise<User | null> {
-    return this.userModel.findOne({ email }).select('+password +roles').exec();
+    return this.userModel
+      .findOne({ email: email.trim().toLowerCase() })
+      .select('+password +roles')
+      .exec();
   }
 
   async findOneById(id: string): Promise<User | null> {
@@ -50,10 +58,11 @@ export class UsersService {
     if (!existingUser) {
       return null;
     }
-    if (updateUserDto.password) {
-      updateUserDto.password = await bcrypt.hash(updateUserDto.password, 10);
+    const updatePayload = { ...updateUserDto };
+    if (updatePayload.password) {
+      updatePayload.password = await bcrypt.hash(updatePayload.password, PASSWORD_SALT_ROUNDS);
     }
-    return this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true }).exec();
+    return this.userModel.findByIdAndUpdate(id, updatePayload, { new: true }).exec();
   }
 
   async delete(id: string): Promise<User | null> {

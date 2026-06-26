@@ -15,6 +15,7 @@ import {
 import { ApiOkResponse } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import { Roles } from '@/common/decorators/roles.decorator';
+import { Role } from '@/common/enums/role.enum';
 import { RolesGuard } from '@/common/guards/roles.guard';
 import { ValidateObjectIdPipe } from '@/common/pipes/validate-object-id.pipe';
 import { JwtAuthGuard } from '@/features/auth/guards/jwt-auth.guard';
@@ -30,7 +31,7 @@ export class GradesController {
   constructor(private readonly gradesService: GradesService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('TEACHER', 'ADMIN')
+  @Roles(Role.TEACHER, Role.ADMIN)
   @Post()
   @UsePipes(new ValidationPipe({ whitelist: true }))
   @ApiOkResponse({ type: ResponseGradeSingleDto })
@@ -66,7 +67,7 @@ export class GradesController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('TEACHER', 'ADMIN')
+  @Roles(Role.TEACHER, Role.ADMIN)
   @Patch(':id')
   @UsePipes(new ValidationPipe({ whitelist: true }))
   @ApiOkResponse({ type: ResponseGradeSingleDto })
@@ -80,7 +81,7 @@ export class GradesController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('TEACHER', 'ADMIN')
+  @Roles(Role.TEACHER, Role.ADMIN)
   @Delete(':id')
   @ApiOkResponse({ type: ResponseGradeSingleDto })
   async delete(@Param('id', ValidateObjectIdPipe) id: string) {

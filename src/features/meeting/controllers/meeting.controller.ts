@@ -15,6 +15,7 @@ import {
 import { ApiOkResponse } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import { Roles } from '@/common/decorators/roles.decorator';
+import { Role } from '@/common/enums/role.enum';
 import { RolesGuard } from '@/common/guards/roles.guard';
 import { ValidateObjectIdPipe } from '@/common/pipes/validate-object-id.pipe';
 import { JwtAuthGuard } from '@/features/auth/guards/jwt-auth.guard';
@@ -30,7 +31,7 @@ export class MeetingsController {
   constructor(private readonly meetingsService: MeetingsService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('TEACHER', 'ADMIN')
+  @Roles(Role.TEACHER, Role.ADMIN)
   @Post()
   @UsePipes(new ValidationPipe({ whitelist: true }))
   @ApiOkResponse({ type: ResponseMeetingSingleDto })
@@ -52,7 +53,7 @@ export class MeetingsController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('TEACHER', 'ADMIN')
+  @Roles(Role.TEACHER, Role.ADMIN)
   @Get(':id')
   @ApiOkResponse({ type: ResponseMeetingSingleDto })
   async findOne(@Param('id', ValidateObjectIdPipe) id: string) {
@@ -65,7 +66,7 @@ export class MeetingsController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('TEACHER', 'ADMIN')
+  @Roles(Role.TEACHER, Role.ADMIN)
   @Patch(':id')
   @UsePipes(new ValidationPipe({ whitelist: true }))
   @ApiOkResponse({ type: ResponseMeetingSingleDto })
@@ -79,7 +80,7 @@ export class MeetingsController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('TEACHER', 'ADMIN')
+  @Roles(Role.TEACHER, Role.ADMIN)
   @Delete(':id')
   @ApiOkResponse({ type: ResponseMeetingSingleDto })
   async delete(@Param('id', ValidateObjectIdPipe) id: string) {

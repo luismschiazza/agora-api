@@ -14,6 +14,7 @@ import {
 import { ApiOkResponse } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
 import { Roles } from '@/common/decorators/roles.decorator';
+import { Role } from '@/common/enums/role.enum';
 import { RolesGuard } from '@/common/guards/roles.guard';
 import { ValidateObjectIdPipe } from '@/common/pipes/validate-object-id.pipe';
 import { JwtAuthGuard } from '@/features/auth/guards/jwt-auth.guard';
@@ -29,7 +30,7 @@ export class DisciplinesController {
   constructor(private readonly disciplinesService: DisciplinesService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('ADMIN', 'COORDINATOR')
+  @Roles(Role.ADMIN, Role.COORDINATOR)
   @Post()
   @UsePipes(new ValidationPipe({ whitelist: true }))
   @ApiOkResponse({ type: ResponseDisciplineSingleDto })
@@ -51,7 +52,7 @@ export class DisciplinesController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('ADMIN', 'COORDINATOR')
+  @Roles(Role.ADMIN, Role.COORDINATOR)
   @Get(':id')
   @ApiOkResponse({ type: ResponseDisciplineSingleDto })
   async findOne(@Param('id', ValidateObjectIdPipe) id: string) {
@@ -65,7 +66,7 @@ export class DisciplinesController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('ADMIN', 'COORDINATOR')
+  @Roles(Role.ADMIN, Role.COORDINATOR)
   @Patch(':id')
   @UsePipes(new ValidationPipe({ whitelist: true }))
   @ApiOkResponse({ type: ResponseDisciplineSingleDto })
@@ -83,7 +84,7 @@ export class DisciplinesController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('ADMIN', 'COODINATOR')
+  @Roles(Role.ADMIN, Role.COORDINATOR)
   @Delete(':id')
   @ApiOkResponse({ type: ResponseDisciplineSingleDto })
   async delete(@Param('id', ValidateObjectIdPipe) id: string) {

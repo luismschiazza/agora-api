@@ -14,6 +14,9 @@ import {
 } from '@nestjs/common';
 import { ApiOkResponse } from '@nestjs/swagger';
 import { plainToInstance } from 'class-transformer';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { Role } from '@/common/enums/role.enum';
+import { RolesGuard } from '@/common/guards/roles.guard';
 import { ValidateObjectIdPipe } from '@/common/pipes/validate-object-id.pipe';
 import { JwtAuthGuard } from '@/features/auth/guards/jwt-auth.guard';
 import { ResponseUserArrayDto } from '../dtos/response/response-user-array.dto';
@@ -43,14 +46,16 @@ export class UsersController {
     return plainToInstance(UserDto, req.user, { excludeExtraneousValues: true });
   }
 
-  @UseGuards(JwtAuthGuard, ExcludeOwnUserGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard, ExcludeOwnUserGuard)
+  @Roles(Role.ADMIN)
   @ApiOkResponse({ type: ResponseUserArrayDto, isArray: true })
   @Get()
   async findAll(@Request() req) {
     return plainToInstance(UserDto, req.filteredUsers, { excludeExtraneousValues: true });
   }
 
-  @UseGuards(JwtAuthGuard, NotOwnUserGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard, NotOwnUserGuard)
+  @Roles(Role.ADMIN)
   @ApiOkResponse({ type: ResponseUserSingleDto })
   @Get(':id')
   async findOne(@Param('id', ValidateObjectIdPipe) id: string) {
@@ -61,7 +66,8 @@ export class UsersController {
     return plainToInstance(UserDto, user, { excludeExtraneousValues: true });
   }
 
-  @UseGuards(JwtAuthGuard, NotOwnUserGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard, NotOwnUserGuard)
+  @Roles(Role.ADMIN)
   @ApiOkResponse({ type: ResponseUserSingleDto })
   @Patch(':id')
   @UsePipes(new ValidationPipe({ whitelist: true }))
@@ -76,7 +82,8 @@ export class UsersController {
     return plainToInstance(UserDto, user, { excludeExtraneousValues: true });
   }
 
-  @UseGuards(JwtAuthGuard, NotOwnUserGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard, NotOwnUserGuard)
+  @Roles(Role.ADMIN)
   @ApiOkResponse({ type: ResponseUserSingleDto })
   @Delete(':id')
   async delete(@Param('id', ValidateObjectIdPipe) id: string) {

@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
+import { Role } from '@/common/enums/role.enum';
 
 export class UserDto {
   @ApiProperty({
@@ -36,6 +37,15 @@ export class UserDto {
   })
   @Expose()
   readonly updatedAt: Date;
+
+  @ApiProperty({
+    description: 'Roles assigned to the user',
+    example: [Role.STUDENT],
+    enum: Role,
+    isArray: true,
+  })
+  @Expose()
+  readonly roles: Role[];
 
   @Exclude()
   readonly password: string;

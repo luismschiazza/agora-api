@@ -18,9 +18,15 @@ import { LocalStrategy } from './strategies/local.strategy';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (config: ConfigService): Promise<JwtModuleOptions> => ({
-        secret: config.get<string>('JWT_SECRET'),
+        secret: (() => {
+          const secret = config.get<string>('JWT_SECRET');
+          if (!secret || secret === 'change_me') {
+            throw new Error('JWT_SECRET must be configured with a strong secret');
+          }
+          return secret;
+        })(),
         signOptions: {
-          expiresIn: config.get<StringValue>('JWT_EXPIRES_IN'),
+          expiresIn: config.get<StringValue>('JWT_EXPIRES_IN') ?? '24h',
         },
       }),
     }),

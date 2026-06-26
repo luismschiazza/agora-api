@@ -1,9 +1,10 @@
 import { faker } from '@faker-js/faker';
+import { Role } from '@/common/enums/role.enum';
 import { User } from '../schemas/user.schema';
 
 export class UserFactory {
   static make(): Partial<User> {
-    const ROLES = ['STUDENT', 'TEACHER', 'COORDINATOR', 'ADMIN', 'GUARDIAN'];
+    const ROLES = Object.values(Role);
     const roles = faker.helpers.arrayElements(ROLES, {
       min: 1,
       max: 2,

@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
+import { Role } from '@/common/enums/role.enum';
 import { WelcomeStudentFactory } from '@/features/mail/factories/welcome-student.factory';
 import { WelcomeTeacherFactory } from '@/features/mail/factories/welcome-teacher.factory';
 import { MailService } from '@/features/mail/services/mail.service';
@@ -15,11 +16,11 @@ export class UserListener {
   async handleUserCreated(user: User) {
     let payload = null;
 
-    if (user.roles.includes('STUDENT')) {
+    if (user.roles.includes(Role.STUDENT)) {
       payload = WelcomeStudentFactory.create(user.email, user.name);
     }
 
-    if (user.roles.includes('TEACHER')) {
+    if (user.roles.includes(Role.TEACHER)) {
       payload = WelcomeTeacherFactory.create(user.email, user.name);
     }
 
