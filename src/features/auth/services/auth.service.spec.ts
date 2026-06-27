@@ -84,10 +84,10 @@ describe('AuthService', () => {
     });
     expect(response).toMatchObject({
       access_token: 'signed-token',
-      accessToken: 'signed-token',
     });
     expect(response.refresh_token).toEqual(expect.any(String));
-    expect(response.refreshToken).toBe(response.refresh_token);
+    expect(response).not.toHaveProperty('accessToken');
+    expect(response).not.toHaveProperty('refreshToken');
     expect(mockUsersService.updateRefreshTokenHash).toHaveBeenCalledWith(
       'user-id',
       expect.any(String),

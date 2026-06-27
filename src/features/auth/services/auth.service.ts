@@ -101,8 +101,6 @@ export class AuthService {
       expires_in: expiresIn,
       access_token: accessToken,
       refresh_token: refreshToken,
-      accessToken,
-      refreshToken,
     };
   }
 
