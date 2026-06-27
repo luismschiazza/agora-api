@@ -8,6 +8,7 @@ import { SeedCommand } from '@/commands/seed.command';
 import { SeedModule } from '@/commands/seed/seed.module';
 import { ValidateObjectIdPipe } from '@/common/pipes/validate-object-id.pipe';
 import { shouldSkipThrottle } from '@/common/throttling/throttler.config';
+import { validateEnvironment } from '@/config/environment.validation';
 import { AttendanceModule } from '@/features/attendance/attendance.module';
 import { AuthModule } from '@/features/auth/auth.module';
 import { DisciplinesModule } from '@/features/disciplines/disciplines.module';
@@ -22,6 +23,7 @@ import { AppService } from './services/app.service';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      validate: validateEnvironment,
     }),
     EventEmitterModule.forRoot(),
     ThrottlerModule.forRoot([
