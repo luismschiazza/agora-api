@@ -1,10 +1,10 @@
 # Use a Node.js base image
-FROM node:24.11.1-alpine AS development
+FROM node:24.16.0-alpine AS development
 
 # Set the working directory
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json to the working directory
+# Copy package.json and package-lock.json
 COPY package.json package-lock.json ./
 
 # Install dependencies
@@ -17,41 +17,41 @@ COPY . .
 EXPOSE 3000
 
 # Start the application in development mode
-CMD ["npm", "run", "start:dev"]
+CMD ["sh", "-c", "npm run console seed && npm run start:dev"]
 
 ###################
 # Build for production
 ###################
-FROM node:24.11.1-alpine AS build
+FROM node:24.16.0-alpine AS build
 
 # Set the working directory
 WORKDIR /usr/src/app
 
-# Copy dependencies and source files from the development stage
+# Copy dependencies and source files from development stage
 COPY --from=development /usr/src/app ./
 
-# Run the build command which creates the production bundle
+# Build project
 RUN npm run build
 
-# Install all dependencies, including dev dependencies, to ensure tools like ts-node are available
-RUN npm install --include=dev
+# Install production-safe deps (rebuild consistency)
+RUN npm install --production=false --package-lock-only && npm cache clean --force
 
-# Set the NODE_ENV environment variable
+# Set environment
 ENV NODE_ENV=production
 
 ###################
 # Production
 ###################
-FROM node:24.11.1-alpine AS production
+FROM node:24.16.0-alpine AS production
 
-# Set the working directory
+# Set working directory
 WORKDIR /usr/src/app
 
-# Copy the bundled code and dependencies from the build stage
+# Copy build result
 COPY --from=build /usr/src/app ./
 
-# Expose the application port
+# Expose port
 EXPOSE 3000
 
-# Start the server using the production build
+# Start production server
 CMD ["node", "dist/main"]

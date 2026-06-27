@@ -1,12 +1,21 @@
-version: '3'
 services:
   mongo-db:
-    image: mongo:latest
+    image: mongo:7.0
     container_name: mongo-db
     ports:
       - '27017:27017'
     volumes:
       - mongo-data:/data/db
+    healthcheck:
+      test: ['CMD', 'mongosh', '--quiet', '--eval', "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+    networks:
+      agora-network:
+        aliases:
+          - mongo-db
 
   nest-app:
     build: .
@@ -14,10 +23,18 @@ services:
     ports:
       - '3000:3000'
     depends_on:
-      - mongo-db
+      mongo-db:
+        condition: service_healthy
     environment:
-      MONGO_URL: mongodb://mongo-db:27017/agora
-    command: npm run start:dev
+      MONGO_URL: mongodb://mongo-db:27017/nest
+      JWT_SECRET: secretKey
+    command: sh -c "npm run start:dev"
+    networks:
+      - agora-network
 
 volumes:
   mongo-data:
+
+networks:
+  agora-network:
+    driver: bridge
